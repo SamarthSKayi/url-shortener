@@ -47,9 +47,7 @@ public class UrlService {
 
         Url url = urlRepository.findByShortCode(shortCode)
                 .orElseThrow(() ->
-                        new UrlNotFoundException(
-                                "Short URL not found: " + shortCode
-                        )
+                        new UrlNotFoundException("Short URL not found")
                 );
 
         if (!Boolean.TRUE.equals(url.getIsActive())) {
@@ -57,7 +55,7 @@ public class UrlService {
         }
 
         if (url.getExpiresAt() != null &&
-                url.getExpiresAt().isBefore(Instant.now())) {
+                !url.getExpiresAt().isAfter(Instant.now())) {
             throw new UrlNotFoundException("This short URL has expired");
         }
 
