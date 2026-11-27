@@ -18,10 +18,11 @@ public class RedirectController {
     }
 
     @GetMapping("/{shortCode}")
-    public ResponseEntity<Void> redirect(
-            @PathVariable String shortCode) {
+    public ResponseEntity<Void> redirect(@PathVariable String shortCode) {
 
         Url url = urlService.getUrlByShortCode(shortCode);
+
+        urlService.incrementClickCount(shortCode);
 
         return ResponseEntity
                 .status(HttpStatus.FOUND)
