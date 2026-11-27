@@ -1,24 +1,36 @@
 package org.scalableurlshortener.service;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.scalableurlshortener.entity.Url;
 import org.scalableurlshortener.repository.UrlRepository;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-@ExtendWith(MockitoExtension.class)
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+
 class UrlServiceTest {
 
     @Mock
     private UrlRepository urlRepository;
 
-    @InjectMocks
+    @Mock
+    private RedisService redisService;
+
     private UrlService urlService;
+
+    @BeforeEach
+    void setUp() {
+        MockitoAnnotations.openMocks(this);
+
+        urlService = new UrlService(
+                urlRepository,
+                redisService,
+                3600
+        );
+    }
 
     @Test
     void shouldCreateShortUrl() {
@@ -41,4 +53,3 @@ class UrlServiceTest {
         verify(urlRepository).save(any(Url.class));
     }
 }
-

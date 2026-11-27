@@ -3,6 +3,7 @@ package org.scalableurlshortener.controller;
 import jakarta.validation.Valid;
 import org.scalableurlshortener.dto.CreateUrlRequest;
 import org.scalableurlshortener.dto.CreateUrlResponse;
+import org.scalableurlshortener.dto.UrlAnalyticsResponse;
 import org.scalableurlshortener.entity.Url;
 import org.scalableurlshortener.service.UrlService;
 import org.springframework.http.HttpStatus;
@@ -35,6 +36,19 @@ public class UrlController {
                 url.getOriginalUrl(),
                 url.getCreatedAt(),
                 url.getExpiresAt()
+        );
+    }
+
+    @GetMapping("/{shortCode}/analytics")
+    public UrlAnalyticsResponse getAnalytics(
+            @PathVariable String shortCode
+    ) {
+        Url url = urlService.getUrlByShortCode(shortCode);
+
+        return new UrlAnalyticsResponse(
+                url.getShortCode(),
+                url.getOriginalUrl(),
+                url.getClickCount()
         );
     }
 }
