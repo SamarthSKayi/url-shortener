@@ -22,11 +22,16 @@ public class RedirectController {
 
         Url url = urlService.getUrlByShortCode(shortCode);
 
+        URI location = URI.create(url.getOriginalUrl());
+
+        // Increment only after successfully resolving the URL
         urlService.incrementClickCount(shortCode);
 
         return ResponseEntity
                 .status(HttpStatus.FOUND)
-                .location(URI.create(url.getOriginalUrl()))
+                .location(location)
                 .build();
     }
+
+
 }

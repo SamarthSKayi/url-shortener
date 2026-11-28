@@ -9,6 +9,13 @@ import org.scalableurlshortener.service.UrlService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+import org.springframework.transaction.annotation.Transactional;
+import org.scalableurlshortener.repository.UrlRepository;
+
+
 @RestController
 @RequestMapping("/api/v1/urls")
 public class UrlController {
@@ -43,12 +50,9 @@ public class UrlController {
     public UrlAnalyticsResponse getAnalytics(
             @PathVariable String shortCode
     ) {
-        Url url = urlService.getUrlByShortCode(shortCode);
-
-        return new UrlAnalyticsResponse(
-                url.getShortCode(),
-                url.getOriginalUrl(),
-                url.getClickCount()
-        );
+        return urlService.getAnalytics(shortCode);
     }
+
+
+
 }

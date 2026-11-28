@@ -1,17 +1,16 @@
 package org.scalableurlshortener.service;
 
 import org.scalableurlshortener.dto.CachedUrl;
+import org.scalableurlshortener.dto.UrlAnalyticsResponse;
 import org.scalableurlshortener.entity.Url;
 import org.scalableurlshortener.exception.ShortCodeGenerationException;
 import org.scalableurlshortener.exception.UrlNotFoundException;
 import org.scalableurlshortener.repository.UrlRepository;
 import org.scalableurlshortener.util.Base62Generator;
-import org.springframework.stereotype.Service;
-import java.time.Instant;
-import java.time.Duration;
-
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
 
+import java.time.Duration;
 import java.time.Instant;
 
 
@@ -137,4 +136,19 @@ public class UrlService {
     public void incrementClickCount(String shortCode) {
         urlRepository.incrementClickCount(shortCode);
     }
+
+    public UrlAnalyticsResponse getAnalytics(String shortCode) {
+
+        Url url = urlRepository.findByShortCode(shortCode)
+                .orElseThrow(() ->
+                        new UrlNotFoundException("Short URL not found")
+                );
+
+        return new UrlAnalyticsResponse(
+                url.getShortCode(),
+                url.getOriginalUrl(),
+                url.getClickCount()
+        );
+    }
+
 }
